@@ -37,7 +37,7 @@ def lambda_handler(event, context):
     cliente["_id"] = str(cliente["_id"])
 
     response = {"status": 200,
-                "cliente": json.dumps(cliente),
+                "cliente":  json.dumps(cliente, indent=4, sort_keys=True, default=str),
                 "token_payload": json.dumps(payload)}
 
     return response
