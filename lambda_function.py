@@ -21,6 +21,9 @@ def lambda_handler(event, context):
         return {'statusCode': 500,
                 'body': json.dumps('No fue posible conectar a MongoDB.')}
 
+    print(event)
+    print(event.headers)
+    print(event["headers"]["Authorization"])
     body = json.loads(event['body'])
     token = body["token"]
     print(token)
