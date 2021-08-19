@@ -35,6 +35,9 @@ def lambda_handler(event, context):
     print(payload)
     cliente = database.clientes.find_one({"token_authorized": token})
     cliente["_id"] = str(cliente["_id"])
-    return {"status": 200,
-            "cliente": cliente,
-            "token_payload": payload}
+
+    response = {"status": 200,
+                "cliente": json.dumps(cliente),
+                "token_payload": json.dumps(payload)}
+
+    return response
