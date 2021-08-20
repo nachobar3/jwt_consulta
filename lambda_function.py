@@ -51,11 +51,11 @@ def lambda_handler(event, context):
 
 def safe_jsonify(d):
     for key in d:
-        if type(d[key]) == dict or type(d[key]) == list:
-            d[key] = safe_jsonify(d[key])
-        else:
-            try:
-                json.dumps(d[key])
-            except TypeError:
+        try:
+            json.dumps(d[key])
+        except TypeError:
+            if type(d[key]) == dict or type(d[key]) == list:
+                d[key] = safe_jsonify(d[key])
+            else:
                 d[key] = str(d[key])
     return json.dumps(d)
