@@ -41,21 +41,28 @@ def lambda_handler(event, context):
 
 
     response = {"statusCode": 200,
-                "body":  safe_jsonify({"cliente": cliente,
-                          "token_payload": payload})
+                "body":  json.dumps(prepare_for_dumps({"cliente": cliente,
+                          "token_payload": payload}))
                 }
 
     print(response)
     return response
 
 
-def safe_jsonify(d):
+def prepare_for_dumps(d):
     for key in d:
-        try:
-            json.dumps(d[key])
-        except TypeError:
-            if type(d[key]) == dict or type(d[key]) == list:
-                d[key] = safe_jsonify(d[key])
-            else:
-                d[key] = str(d[key])
-    return json.dumps(d)
+        if type(d[key]) == dict or type(d[key]) == list:
+            prepare_for_dumps(d)
+        elif is_jsonable(d[key]):
+            pass
+        else:
+            d[key] = str(d[key])
+    return d
+
+
+def is_jsonable(x):
+    try:
+        json.dumps(x)
+        return True
+    except (TypeError, OverflowError):
+        return False
