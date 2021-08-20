@@ -51,9 +51,7 @@ def lambda_handler(event, context):
 
 def prepare_for_dumps(d):
     for key in d:
-        if type(d[key]) == dict or type(d[key]) == list:
-            prepare_for_dumps(d)
-        elif is_jsonable(d[key]):
+        if is_jsonable(d[key]):
             pass
         else:
             d[key] = str(d[key])
