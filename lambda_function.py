@@ -21,11 +21,9 @@ def lambda_handler(event, context):
         return {'statusCode': 500,
                 'body': json.dumps('No fue posible conectar a MongoDB.')}
 
-    print(event)
-    print(event.headers)
-    print(event["headers"]["Authorization"])
-    body = json.loads(event['body'])
-    token = body["token"]
+    token = event["headers"]["Authorization"]
+    print(token)
+    jwt_secret = "2oSaOLx6Uii6sn5DfqlcaPWPYCJS"
     print(token)
     jwt_secret = "2oSaOLx6Uii6sn5DfqlcaPWPYCJS"
 
@@ -40,10 +38,24 @@ def lambda_handler(event, context):
     del cliente["token_authorized"]
     del cliente["token_unauthorized"]
 
+
+
     response = {"statusCode": 200,
-                "body":  json.dumps({"cliente": cliente,
-                          "token_payload": payload}, indent=4, sort_keys=True, default=str)
+                "body":  safe_jsonify({"cliente": cliente,
+                          "token_payload": payload})
                 }
 
     print(response)
     return response
+
+
+def safe_jsonify(d):
+    for key in d:
+        if type(d[key]) == dict or type(d[key]) == list:
+            d[key] = safe_jsonify(d[key])
+        else:
+            try:
+                json.dumps(d[key])
+            except TypeError:
+                d[key] = str(d[key])
+    return json.dumps(d)
