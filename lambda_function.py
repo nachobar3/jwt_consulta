@@ -38,11 +38,9 @@ def lambda_handler(event, context):
     del cliente["token_authorized"]
     del cliente["token_unauthorized"]
 
-
-
     response = {"statusCode": 200,
-                "body":  json.dumps(prepare_for_dumps({"cliente": cliente,
-                          "token_payload": payload}))
+                "body":  prepare_for_dumps({"cliente": cliente,
+                          "token_payload": payload})
                 }
 
     print(response)
