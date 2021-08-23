@@ -22,9 +22,6 @@ def lambda_handler(event, context):
                 'body': json.dumps('No fue posible conectar a MongoDB.')}
 
     token = event["headers"]["Authorization"]
-    print(token)
-    jwt_secret = "2oSaOLx6Uii6sn5DfqlcaPWPYCJS"
-    print(token)
     jwt_secret = "2oSaOLx6Uii6sn5DfqlcaPWPYCJS"
 
     try:
@@ -35,6 +32,10 @@ def lambda_handler(event, context):
 
     print(payload)
     cliente = database.clientes.find_one({"token_authorized": token})
+    if not cliente:
+        return {"status": 401,
+                "message": "Cliente no autenticado vía mail."}
+
     del cliente["token_authorized"]
     del cliente["token_unauthorized"]
 
