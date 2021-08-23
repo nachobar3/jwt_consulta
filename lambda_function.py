@@ -27,13 +27,13 @@ def lambda_handler(event, context):
     try:
         payload = jwt.decode(token, jwt_secret, algorithms=["HS256"])
     except InvalidSignatureError:
-        return {"status": 401,
+        return {"statusCode": 401,
                 "message": "Invalid signature."}
 
     print(payload)
     cliente = database.clientes.find_one({"token_authorized": token})
     if not cliente:
-        return {"status": 401,
+        return {"statusCode": 401,
                 "message": "Cliente no autenticado vía mail."}
 
     del cliente["token_authorized"]
